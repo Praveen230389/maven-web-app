@@ -95,7 +95,7 @@ pipeline {
         stage('SonarQube Analysis') {
             environment {
                 SONAR_HOST_URL = 'http://44.203.100.154:9000'
-                SONAR_AUTH_TOKEN = credentials('SonarQube')
+                SONAR_AUTH_TOKEN = credentials('SonarQubetoken')
             }
             steps {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=sample_project -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
