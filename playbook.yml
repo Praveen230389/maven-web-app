@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: htop-pod
+spec:
+  containers:
+    - name: htop-container
+      image: ubuntu:latest
+      command: ["/bin/bash", "-c", "apt update && apt install -y htop && htop"]
+      tty: true
