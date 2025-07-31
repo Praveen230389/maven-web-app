@@ -78,7 +78,11 @@ pipeline {
                 sh 'docker run -d -p 8082:80 --name justprojectcontainer justproject'
             }
         }
-
+        stage('Execute playbook') {
+            steps {
+                sh 'ansiblePlaybook credentialsId: 'webserver', disableHostKeyChecking: true, installation: 'Ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath: '''
+            }
+        }
         stage('Test') {
             steps {
                 sh 'mvn test'
