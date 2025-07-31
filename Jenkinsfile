@@ -2,9 +2,10 @@ pipeline {
 
     agent any
         
-    tools{
+    tools {
         maven "maven"
     }
+
     environment {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
@@ -16,9 +17,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-               sh 'mvn clean package'
+                sh 'mvn clean package'
             }
         }
+
         stage('Clone Repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/Praveen230389/maven-web-app.git'
@@ -78,26 +80,33 @@ pipeline {
                 sh 'docker run -d -p 8082:80 --name justprojectcontainer justproject'
             }
         }
+
         stage('Execute playbook') {
             steps {
-                sh 'ansiblePlaybook credentialsId: 'webserver', disableHostKeyChecking: true, installation: 'Ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath:'
+                ansiblePlaybook(
+                    credentialsId: 'webserver',
+                    disableHostKeyChecking: true,
+                    installation: 'Ansible',
+                    inventory: '/etc/ansible/inventory.ini',
+                    playbook: '/etc/ansible/playbook.yml'
+                )
             }
         }
+
         stage('Test') {
             steps {
                 sh 'mvn test'
             }
         }
-        
+
         stage('SonarQube Analysis') {
             environment {
-                SONAR_HOST_URL = 'http://44.203.100.154:9000' // Replace with your SonarQube URL
-                SONAR_AUTH_TOKEN = credentials('SonarQube') // Store your token in Jenkins credentials
+                SONAR_HOST_URL = 'http://44.203.100.154:9000'
+                SONAR_AUTH_TOKEN = credentials('SonarQube')
             }
             steps {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=sample_project -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
         }
-        
     }
 }
