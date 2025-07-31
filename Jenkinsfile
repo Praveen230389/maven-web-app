@@ -83,17 +83,10 @@ pipeline {
 
         stage('Execute playbook') {
             steps {
-                ansiblePlaybook(
-                    credentialsId: 'webserver',
-                    disableHostKeyChecking: true,
-                    installation: 'Ansible',
-                    inventory: '/etc/ansible/inventory.ini',
-                    playbook: '/etc/ansible/playbook.yml'
-                )
+                ansiblePlaybook credentialsId: 'webserver', disableHostKeyChecking: true, installation: 'Ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath: ''
             }
         }
-
-        stage('Test') {
+        stage('test maven') {
             steps {
                 sh 'mvn test'
             }
