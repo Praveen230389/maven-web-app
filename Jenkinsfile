@@ -80,7 +80,7 @@ pipeline {
         }
         stage('Execute playbook') {
             steps {
-                sh 'ansiblePlaybook credentialsId: 'webserver', disableHostKeyChecking: true, installation: 'Ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath: '''
+                sh 'ansiblePlaybook credentialsId: 'webserver', disableHostKeyChecking: true, installation: 'Ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath:'
             }
         }
         stage('Test') {
