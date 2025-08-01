@@ -10,7 +10,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION    = 'us-east-1'
-        DOCKER_SERVER_IP      = "18.206.162.90"
+        DOCKER_SERVER_IP      = "34.226.143.86"
         REMOTE_USER           = "ubuntu"
     }
 
@@ -51,33 +51,9 @@ pipeline {
             }
         }
 
-        stage('Docker Stop Container') {
-            steps {
-                sh 'docker stop justprojectcontainer || true'
-            }
-        }
-
-        stage('Docker Remove Container') {
-            steps {
-                sh 'docker rm justprojectcontainer || true'
-            }
-        }
-
-        stage('Docker Remove Image') {
-            steps {
-                sh 'docker rmi justproject || true'
-            }
-        }
-
         stage('Docker Image Build') {
             steps {
                 sh 'docker build -t justproject .'
-            }
-        }
-
-        stage('Docker Container Creation') {
-            steps {
-                sh 'docker run -d -p 8082:80 --name justprojectcontainer justproject'
             }
         }
 
