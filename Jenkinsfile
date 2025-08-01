@@ -80,6 +80,7 @@ pipeline {
         stage('k8s deployment') {
             steps {
                 sh '''
+                echo "Using kubeconfig from Jenkins home..."
                 export KUBECONFIG=/var/lib/jenkins/.kube/config
                 kubectl get nodes
                 kubectl apply -f k8s-deploy.yml
