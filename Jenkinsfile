@@ -79,7 +79,11 @@ pipeline {
         }
         stage('k8s deployment') {
             steps {
-                sh 'KUBECONFIG=/var/lib/jenkins/.kube/config kubectl apply -f k8s-deploy.yml'
+                sh '''
+                export KUBECONFIG=/var/lib/jenkins/.kube/config
+                kubectl get nodes
+                kubectl apply -f k8s-deploy.yml
+                '''
             }
         }
     }
