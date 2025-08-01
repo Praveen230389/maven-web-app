@@ -53,7 +53,7 @@ pipeline {
 
         stage('Docker Image Build') {
             steps {
-                sh 'docker build -t justproject .'
+                sh 'docker build -t ashokit/mavenwebapp .'
             }
         }
 
