@@ -10,7 +10,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION    = 'us-east-1'
-        DOCKER_SERVER_IP      = "34.226.143.86"
+        JENKINS_SERVER_IP     = "54.226.59.54"
         REMOTE_USER           = "ubuntu"
     }
 
@@ -70,7 +70,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                SONAR_HOST_URL = 'http://34.226.143.86:9000'
+                SONAR_HOST_URL = 'http://54.226.59.54:9000'
                 SONAR_AUTH_TOKEN = credentials('SonarQubetoken')
             }
             steps {
