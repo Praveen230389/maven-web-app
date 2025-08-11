@@ -10,7 +10,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION    = 'us-east-1'
-        JENKINS_SERVER_IP     = "54.226.59.54"
+        DOCKER_SERVER_IP     = "52.91.251.90"
         REMOTE_USER           = "ubuntu"
     }
 
@@ -59,7 +59,7 @@ pipeline {
 
         stage('Execute playbook') {
             steps {
-                ansiblePlaybook credentialsId: 'ansible-privatekey', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/inventory.ini', playbook: '/etc/ansible/playbook.yml', vaultTmpPath: ''
+                ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/var/lib/jenkins/workspace/mainproject/playbook.yaml', vaultTmpPath: ''
             }
         }
         stage('test maven') {
@@ -70,7 +70,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                SONAR_HOST_URL = 'http://54.226.59.54:9000'
+                SONAR_HOST_URL = 'http://54.87.160.236:9000'
                 SONAR_AUTH_TOKEN = credentials('SonarQubetoken')
             }
             steps {
