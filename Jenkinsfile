@@ -108,8 +108,9 @@ pipeline {
         }
         stage('k8s deployment') {
             steps {
-                sh 'kubectl apply -f k8s-deploy.yml'
+                withEnv(['KUBECONFIG=/home/ubuntu/.kube/config']) {
+                      sh 'kubectl apply -f k8s-deploy.yml'
             }
         }
-    }
+     }
 }
