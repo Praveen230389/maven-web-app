@@ -14,15 +14,16 @@ pipeline {
     }
 
     stages {
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
-        }
 
         stage('Clone Repo') {
             steps {
                 git branch: 'main', url: 'https://github.com/Praveen230389/maven-web-app.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
             }
         }
 
@@ -69,7 +70,7 @@ pipeline {
             }
         }
 
-        stage('test maven') {
+        stage('Test Maven') {
             steps {
                 sh 'mvn test'
             }
@@ -77,14 +78,14 @@ pipeline {
 
         stage('Stage IV: SAST') {
             steps { 
-                echo "Running Static application security testing using SonarQube Scanner ..."
+                echo "Running Static Application Security Testing using SonarQube Scanner ..."
                 withSonarQubeEnv('SonarQube') {
                     sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=Kubernetes'
                 }
             }
         }
 
-        stage('Stage V: QualityGates') {
+        stage('Stage V: Quality Gates') {
             steps { 
                 echo "Running Quality Gates to verify the code quality"
                 script {
@@ -98,7 +99,7 @@ pipeline {
             }
         }
 
-        stage('trivy scan') {
+        stage('Trivy Scan') {
             steps { 
                 echo "Scanning Image for Vulnerabilities"
                 sh "trivy image --scanners vuln --offline-scan adamtravis/democicd:latest > trivyresults.txt"
@@ -115,12 +116,21 @@ pipeline {
             }
         }
 
-        stage('k8s deployment') {
+        stage('K8s Deployment') {
             steps {
-                withEnv(['KUBECONFIG=/home/ubuntu/.kube/config']) {
+                withKubeConfig(
+                    caCertificate: '',
+                    clusterName: '',
+                    contextName: '',
+                    credentialsId: 'k8s-Sonar-server',
+                    namespace: '',
+                    restrictKubeConfigAccess: false,
+                    serverUrl: ''
+                ) {
                     sh 'kubectl apply -f k8s-deploy.yml'
                 }
             }
         }
-    }
-}
+
+    } // end of stages
+} // end of pipeline
