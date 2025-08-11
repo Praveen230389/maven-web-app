@@ -59,7 +59,7 @@ pipeline {
 
         stage('Execute playbook') {
             steps {
-                ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/var/lib/jenkins/workspace/mainproject/playbook.yaml', vaultTmpPath: ''
+                ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/home/ubuntu/workspace/mainproject/playbook.yaml', vaultTmpPath: ''
             }
         }
         stage('test maven') {
