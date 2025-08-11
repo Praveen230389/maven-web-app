@@ -1,5 +1,4 @@
 pipeline {  
-
     agent any
         
     tools {
@@ -10,7 +9,7 @@ pipeline {
         AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
         AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
         AWS_DEFAULT_REGION    = 'us-east-1'
-        DOCKER_SERVER_IP     = "52.91.251.90"
+        DOCKER_SERVER_IP      = "52.91.251.90"
         REMOTE_USER           = "ubuntu"
     }
 
@@ -59,22 +58,31 @@ pipeline {
 
         stage('Execute playbook') {
             steps {
-                ansiblePlaybook credentialsId: 'ansible', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: '/home/ubuntu/workspace/mainproject/playbook.yaml', vaultTmpPath: ''
+                ansiblePlaybook(
+                    credentialsId: 'ansible',
+                    disableHostKeyChecking: true,
+                    installation: 'ansible',
+                    inventory: '/etc/ansible/hosts',
+                    playbook: '/home/ubuntu/workspace/mainproject/playbook.yaml',
+                    vaultTmpPath: ''
+                )
             }
         }
+
         stage('test maven') {
             steps {
                 sh 'mvn test'
             }
         }
+
         stage('Stage IV: SAST') {
             steps { 
                 echo "Running Static application security testing using SonarQube Scanner ..."
-                   withSonarQubeEnv('SonarQube') {
-                       sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=Kubernetes'
-              }
-           }
-       }
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml -Dsonar.dependencyCheck.jsonReportPath=target/dependency-check-report.json -Dsonar.dependencyCheck.htmlReportPath=target/dependency-check-report.html -Dsonar.projectName=Kubernetes'
+                }
+            }
+        }
 
         stage('Stage V: QualityGates') {
             steps { 
@@ -106,10 +114,12 @@ pipeline {
                 sh 'mvn sonar:sonar -Dsonar.projectKey=sample_project -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_AUTH_TOKEN'
             }
         }
+
         stage('k8s deployment') {
             steps {
                 withEnv(['KUBECONFIG=/home/ubuntu/.kube/config']) {
-                      sh 'kubectl apply -f k8s-deploy.yml'
+                    sh 'kubectl apply -f k8s-deploy.yml'
+                }
             }
         }
     }
