@@ -116,21 +116,10 @@ pipeline {
             }
         }
 
-        stage('K8s Deployment') {
+        stage('k8s deployment') {
             steps {
-                withKubeConfig(
-                    caCertificate: '',
-                    clusterName: '',
-                    contextName: '',
-                    credentialsId: 'k8s-Sonar-server',
-                    namespace: '',
-                    restrictKubeConfigAccess: false,
-                    serverUrl: ''
-                ) {
-                    sh 'kubectl apply -f k8s-deploy.yml'
-                }
+                sh 'kubectl apply -f k8s-deploy.yml'
             }
         }
-
-    } // end of stages
-} // end of pipeline
+    }
+}
