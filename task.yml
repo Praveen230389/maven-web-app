@@ -4,22 +4,27 @@
   tasks:
     - name: Copy Dockerfile
       copy:
-       src: Dockerfile
-       dest: /home/ansadmin/
+        src: Dockerfile
+        dest: /home/ansadmin/
+
     - name: Copy Artifact
       copy:
-       src: target
-       dest: /home/ansadmin
-    - name : Build image
-      command: docker build -t ashokit/mavenwebapp .
-    - name : Push Docker Image
-      command: docker push ashokit/mavenwebapp .
+        src: target
+        dest: /home/ansadmin/
+
+    - name: Build image
+      command: docker build -t ashokit/mavenwebapp:latest .
+
+    - name: Push Docker Image
+      command: docker push ashokit/mavenwebapp:latest
+
 - name: Second Play - K8s Deployment
   hosts: nodes
   tasks:
-   - name: 
-     copy:
-       src: k8s-deploy.yml
-       dest: /home/ansadmin
-   - name : K8S Deployment
-     command: kubectl apply -f k8s-deploy.yml
+    - name: Copy Deployment file
+      copy:
+        src: k8s-deploy.yml
+        dest: /home/ansadmin/
+
+    - name: Apply Deployment
+      command: kubectl apply -f /home/ansadmin/k8s-deploy.yml
