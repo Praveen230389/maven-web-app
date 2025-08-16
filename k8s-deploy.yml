@@ -20,7 +20,7 @@ spec:
         image: ashokit/mavenwebapp:latest
         imagePullPolicy: Always
         ports:
-        - containerPort: 8085
+        - containerPort: 8080
 ---
 apiVersion: v1
 kind: Service
@@ -32,5 +32,5 @@ spec:
     app: mavenwebapp
   ports:
     - port: 80
-      targetPort: 8085
+      targetPort: 8080
       nodePort: 30080   # access using EC2-Public-IP:30080
