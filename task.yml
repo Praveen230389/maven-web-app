@@ -11,11 +11,11 @@
        src: target
        dest: /home/ansadmin
     - name : Build image
-      command: docker build -t praveen230389/boardshack:latest .
+      command: docker build -t ashokit/mavenwebapp .
     - name : Push Docker Image
-      command: docker push praveen230389/boardshack:latest .
+      command: docker push ashokit/mavenwebapp .
 - name: Second Play - K8s Deployment
-  hosts: eks
+  hosts: nodes
   tasks:
    - name: 
      copy:
