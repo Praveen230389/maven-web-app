@@ -2,36 +2,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: mavenwebappdeployment
+  name: mavenwebappdeployment
 spec:
- replicas: 2
- strategy: 
+  replicas: 2
+  strategy:
     type: Recreate
- selector: 
-   matchLabels: 
-     app: mavenwebapp
- template:
-  metadata:
-   name: mavenwebapppod
-   labels:
-     app: mavenwebapp	 
-  spec: 
-    containers:
-    - name: mavenwebappcontainer
-      image: ashokit/mavenwebapp
-      imagePullPolicy: Always
-      ports:
-      - containerPort: 8085
+  selector:
+    matchLabels:
+      app: mavenwebapp
+  template:
+    metadata:
+      labels:
+        app: mavenwebapp
+    spec:
+      containers:
+      - name: mavenwebappcontainer
+        image: ashokit/mavenwebapp:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8085
 ---
 apiVersion: v1
 kind: Service
 metadata:
- name: mavenwebappsvc
+  name: mavenwebappsvc
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
-   app: mavenwebapp
+    app: mavenwebapp
   ports:
-   - port: 80
-     targetPort: 8085
-...
+    - port: 80
+      targetPort: 8085
+      nodePort: 30080   # access using EC2-Public-IP:30080
